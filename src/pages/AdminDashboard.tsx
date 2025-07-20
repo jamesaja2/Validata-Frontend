@@ -119,7 +119,12 @@ export const AdminDashboard: React.FC = () => {
   ];
 
   return (
-    <Layout title="Admin Dashboard" subtitle="Platform oversight and quality control">
+    <Layout 
+      title="Admin Dashboard" 
+      subtitle="Platform oversight and quality control"
+      activeSection={activeSection}
+      onSectionChange={setActiveSection}
+    >
       <div className="p-4 md:p-8 max-w-7xl mx-auto">
         {/* Desktop Navigation */}
         <div className="hidden md:flex flex-wrap gap-2 mb-8 bg-[#F2F2F2] dark:bg-gray-800 p-1 rounded-2xl">
@@ -149,69 +154,6 @@ export const AdminDashboard: React.FC = () => {
         </div>
 
         {/* Mobile Menu Button */}
-        <div className="md:hidden mb-6">
-          <button
-            onClick={() => setIsMobileMenuOpen(true)}
-            className="flex items-center px-4 py-2 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700"
-          >
-            <svg className="w-5 h-5 mr-2 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-            <span className="text-gray-700 dark:text-gray-300">Menu</span>
-          </button>
-        </div>
-
-        {/* Mobile Sidebar */}
-        {isMobileMenuOpen && (
-          <>
-            <div 
-              className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
-              onClick={() => setIsMobileMenuOpen(false)}
-            />
-            <div className="fixed left-0 top-0 h-full w-64 bg-white dark:bg-gray-900 z-50 transform transition-transform duration-300 ease-in-out md:hidden shadow-xl">
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-lg font-semibold text-[#0A0E2A] dark:text-white">Menu</h2>
-                  <button
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
-                  >
-                    <svg className="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </div>
-                <nav className="space-y-2">
-                  {[
-                    { id: 'overview', label: 'Overview', icon: Activity },
-                    { id: 'review', label: 'Review Queue', icon: Eye },
-                    { id: 'quality', label: 'Quality Control', icon: Shield },
-                    { id: 'users', label: 'User Management', icon: Users },
-                  ].map((tab) => {
-                    const Icon = tab.icon;
-                    return (
-                      <button
-                        key={tab.id}
-                        onClick={() => {
-                          setActiveSection(tab.id as any);
-                          setIsMobileMenuOpen(false);
-                        }}
-                        className={`w-full flex items-center px-4 py-3 rounded-xl transition-all duration-200 text-left ${
-                          activeSection === tab.id
-                            ? 'bg-[#00FFB2] text-[#0A0E2A]'
-                            : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
-                        }`}
-                      >
-                        <Icon className="w-5 h-5 mr-3" />
-                        {tab.label}
-                      </button>
-                    );
-                  })}
-                </nav>
-              </div>
-            </div>
-          </>
-        )}
 
         {/* Overview Section */}
         {activeSection === 'overview' && (
@@ -244,8 +186,8 @@ export const AdminDashboard: React.FC = () => {
                     <div className="flex items-center">
                       <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
                       <div>
-                        <div className="text-sm font-medium text-gray-900 dark:text-white">Task Completed</div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">Bitcoin Analysis by alex_crypto</div>
+                        <div className="text-sm font-medium text-[#0A0E2A] dark:text-white">Task Completed</div>
+                        <div className="text-xs text-gray-600 dark:text-gray-300">Bitcoin Analysis by alex_crypto</div>
                       </div>
                     </div>
                     <span className="text-xs text-gray-500 dark:text-gray-400">2m ago</span>
@@ -254,8 +196,8 @@ export const AdminDashboard: React.FC = () => {
                     <div className="flex items-center">
                       <AlertTriangle className="w-5 h-5 text-orange-500 mr-3" />
                       <div>
-                        <div className="text-sm font-medium text-gray-900 dark:text-white">Quality Issue</div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">Flagged submission needs review</div>
+                        <div className="text-sm font-medium text-[#0A0E2A] dark:text-white">Quality Issue</div>
+                        <div className="text-xs text-gray-600 dark:text-gray-300">Flagged submission needs review</div>
                       </div>
                     </div>
                     <span className="text-xs text-gray-500 dark:text-gray-400">15m ago</span>
@@ -264,8 +206,8 @@ export const AdminDashboard: React.FC = () => {
                     <div className="flex items-center">
                       <Users className="w-5 h-5 text-blue-500 mr-3" />
                       <div>
-                        <div className="text-sm font-medium text-gray-900 dark:text-white">New Labeler</div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">defi_expert joined the platform</div>
+                        <div className="text-sm font-medium text-[#0A0E2A] dark:text-white">New Labeler</div>
+                        <div className="text-xs text-gray-600 dark:text-gray-300">defi_expert joined the platform</div>
                       </div>
                     </div>
                     <span className="text-xs text-gray-500 dark:text-gray-400">1h ago</span>

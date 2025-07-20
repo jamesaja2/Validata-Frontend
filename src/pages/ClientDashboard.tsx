@@ -56,7 +56,12 @@ export const ClientDashboard: React.FC = () => {
   ];
 
   return (
-    <Layout title="Client Dashboard" subtitle="Manage your data labeling projects">
+    <Layout 
+      title="Client Dashboard" 
+      subtitle="Manage your data labeling projects"
+      activeSection={activeSection}
+      onSectionChange={setActiveSection}
+    >
       <div className="p-4 md:p-8 max-w-7xl mx-auto">
         {/* Desktop Navigation */}
         <div className="hidden md:flex flex-wrap gap-2 mb-8 bg-[#F2F2F2] dark:bg-gray-800 p-1 rounded-2xl">
@@ -86,69 +91,6 @@ export const ClientDashboard: React.FC = () => {
         </div>
 
         {/* Mobile Menu Button */}
-        <div className="md:hidden mb-6">
-          <button
-            onClick={() => setIsMobileMenuOpen(true)}
-            className="flex items-center px-4 py-2 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700"
-          >
-            <svg className="w-5 h-5 mr-2 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-            <span className="text-gray-700 dark:text-gray-300">Menu</span>
-          </button>
-        </div>
-
-        {/* Mobile Sidebar */}
-        {isMobileMenuOpen && (
-          <>
-            <div 
-              className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
-              onClick={() => setIsMobileMenuOpen(false)}
-            />
-            <div className="fixed left-0 top-0 h-full w-64 bg-white dark:bg-gray-900 z-50 transform transition-transform duration-300 ease-in-out md:hidden shadow-xl">
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-lg font-semibold text-[#0A0E2A] dark:text-white">Menu</h2>
-                  <button
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
-                  >
-                    <svg className="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </div>
-                <nav className="space-y-2">
-                  {[
-                    { id: 'overview', label: 'Overview', icon: Eye },
-                    { id: 'upload', label: 'Upload Dataset', icon: Upload },
-                    { id: 'tasks', label: 'Active Tasks', icon: Clock },
-                    { id: 'history', label: 'Job History', icon: CheckCircle },
-                  ].map((tab) => {
-                    const Icon = tab.icon;
-                    return (
-                      <button
-                        key={tab.id}
-                        onClick={() => {
-                          setActiveSection(tab.id as any);
-                          setIsMobileMenuOpen(false);
-                        }}
-                        className={`w-full flex items-center px-4 py-3 rounded-xl transition-all duration-200 text-left ${
-                          activeSection === tab.id
-                            ? 'bg-[#00FFB2] text-[#0A0E2A]'
-                            : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
-                        }`}
-                      >
-                        <Icon className="w-5 h-5 mr-3" />
-                        {tab.label}
-                      </button>
-                    );
-                  })}
-                </nav>
-              </div>
-            </div>
-          </>
-        )}
 
         {/* Overview Section */}
         {activeSection === 'overview' && (
@@ -204,8 +146,8 @@ export const ClientDashboard: React.FC = () => {
                     <div className="flex items-center space-x-3">
                       <CheckCircle className="w-4 h-4 text-green-500" />
                       <div>
-                        <div className="text-sm font-medium text-gray-900 dark:text-white">Task Completed</div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">Smart Contract Analysis</div>
+                        <div className="text-sm font-medium text-[#0A0E2A] dark:text-white">Task Completed</div>
+                        <div className="text-xs text-gray-600 dark:text-gray-300">Smart Contract Analysis</div>
                       </div>
                     </div>
                     <span className="text-xs text-gray-500 dark:text-gray-400">2h ago</span>
@@ -214,8 +156,8 @@ export const ClientDashboard: React.FC = () => {
                     <div className="flex items-center space-x-3">
                       <Clock className="w-4 h-4 text-blue-500" />
                       <div>
-                        <div className="text-sm font-medium text-gray-900 dark:text-white">Progress Update</div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">BTC Analysis 75% complete</div>
+                        <div className="text-sm font-medium text-[#0A0E2A] dark:text-white">Progress Update</div>
+                        <div className="text-xs text-gray-600 dark:text-gray-300">BTC Analysis 75% complete</div>
                       </div>
                     </div>
                     <span className="text-xs text-gray-500 dark:text-gray-400">4h ago</span>
