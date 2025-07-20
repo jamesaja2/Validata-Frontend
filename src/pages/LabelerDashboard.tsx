@@ -4,6 +4,7 @@ import { Layout } from '../components/Layout';
 
 export const LabelerDashboard: React.FC = () => {
   const [activeSection, setActiveSection] = useState<'overview' | 'marketplace' | 'active' | 'earnings'>('overview');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const stats = [
     { label: 'Total Earned', value: '2,847.3 ICP', change: '+234.5 this month', color: 'text-[#00FFB2]' },
@@ -93,8 +94,8 @@ export const LabelerDashboard: React.FC = () => {
   return (
     <Layout title="Labeler Dashboard" subtitle="Earn rewards through quality data labeling">
       <div className="p-4 md:p-8 max-w-7xl mx-auto">
-        {/* Navigation */}
-        <div className="flex flex-wrap gap-2 mb-8 bg-[#F2F2F2] p-1 rounded-2xl">
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex flex-wrap gap-2 mb-8 bg-[#F2F2F2] dark:bg-gray-800 p-1 rounded-2xl">
           {[
             { id: 'overview', label: 'Overview', icon: Target },
             { id: 'marketplace', label: 'Marketplace', icon: Search },
@@ -108,8 +109,8 @@ export const LabelerDashboard: React.FC = () => {
                 onClick={() => setActiveSection(tab.id as any)}
                 className={`flex items-center px-3 md:px-4 py-2 rounded-xl transition-all duration-200 text-sm md:text-base ${
                   activeSection === tab.id
-                    ? 'bg-white shadow-sm text-[#0A0E2A]'
-                    : 'text-gray-600 hover:text-[#0A0E2A]'
+                    ? 'bg-white dark:bg-gray-700 shadow-sm text-[#0A0E2A] dark:text-white'
+                    : 'text-gray-600 dark:text-gray-300 hover:text-[#0A0E2A] dark:hover:text-white'
                 }`}
               >
                 <Icon className="w-4 h-4 mr-2" />
@@ -120,15 +121,80 @@ export const LabelerDashboard: React.FC = () => {
           })}
         </div>
 
+        {/* Mobile Menu Button */}
+        <div className="md:hidden mb-6">
+          <button
+            onClick={() => setIsMobileMenuOpen(true)}
+            className="flex items-center px-4 py-2 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700"
+          >
+            <svg className="w-5 h-5 mr-2 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <span className="text-gray-700 dark:text-gray-300">Menu</span>
+          </button>
+        </div>
+
+        {/* Mobile Sidebar */}
+        {isMobileMenuOpen && (
+          <>
+            <div 
+              className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
+            <div className="fixed left-0 top-0 h-full w-64 bg-white dark:bg-gray-900 z-50 transform transition-transform duration-300 ease-in-out md:hidden shadow-xl">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-8">
+                  <h2 className="text-lg font-semibold text-[#0A0E2A] dark:text-white">Menu</h2>
+                  <button
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+                  >
+                    <svg className="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                <nav className="space-y-2">
+                  {[
+                    { id: 'overview', label: 'Overview', icon: Target },
+                    { id: 'marketplace', label: 'Marketplace', icon: Search },
+                    { id: 'active', label: 'Active Tasks', icon: Clock },
+                    { id: 'earnings', label: 'Earnings', icon: TrendingUp },
+                  ].map((tab) => {
+                    const Icon = tab.icon;
+                    return (
+                      <button
+                        key={tab.id}
+                        onClick={() => {
+                          setActiveSection(tab.id as any);
+                          setIsMobileMenuOpen(false);
+                        }}
+                        className={`w-full flex items-center px-4 py-3 rounded-xl transition-all duration-200 text-left ${
+                          activeSection === tab.id
+                            ? 'bg-[#00FFB2] text-[#0A0E2A]'
+                            : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                        }`}
+                      >
+                        <Icon className="w-5 h-5 mr-3" />
+                        {tab.label}
+                      </button>
+                    );
+                  })}
+                </nav>
+              </div>
+            </div>
+          </>
+        )}
+
         {/* Overview Section */}
         {activeSection === 'overview' && (
           <div className="space-y-6">
             {/* Stats Grid */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
               {stats.map((stat, index) => (
-                <div key={index} className="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-gray-100">
+                <div key={index} className="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs md:text-sm text-gray-500">{stat.label}</span>
+                    <span className="text-xs md:text-sm text-gray-500 dark:text-gray-400">{stat.label}</span>
                     {stat.label === 'Reputation Level' && (
                       <Award className="w-4 h-4 text-orange-500" />
                     )}
@@ -136,29 +202,29 @@ export const LabelerDashboard: React.FC = () => {
                   <div className={`text-lg md:text-2xl font-bold ${stat.color} mb-1`}>
                     {stat.value}
                   </div>
-                  <div className="text-xs text-gray-500">{stat.change}</div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400">{stat.change}</div>
                 </div>
               ))}
             </div>
 
             {/* Reputation Progress */}
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-[#0A0E2A]" style={{ fontFamily: 'Sora, sans-serif' }}>
+                <h2 className="text-lg font-semibold text-[#0A0E2A] dark:text-white" style={{ fontFamily: 'Sora, sans-serif' }}>
                   Reputation Progress
                 </h2>
                 <div className="flex items-center space-x-2">
                   <Star className="w-5 h-5 text-orange-500" />
-                  <span className="text-sm text-gray-600">Level 8 - Expert</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-300">Level 8 - Expert</span>
                 </div>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-3">
+              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
                 <div
                   className="bg-gradient-to-r from-orange-500 to-[#00FFB2] h-3 rounded-full transition-all duration-500"
                   style={{ width: '75%' }}
                 />
               </div>
-              <div className="flex justify-between text-sm text-gray-500 mt-2">
+              <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400 mt-2">
                 <span>2,847 XP</span>
                 <span>Next Level: 3,200 XP</span>
               </div>
@@ -166,18 +232,18 @@ export const LabelerDashboard: React.FC = () => {
 
             {/* Quick Actions */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                <h2 className="text-xl font-semibold text-[#0A0E2A] mb-4" style={{ fontFamily: 'Sora, sans-serif' }}>
+              <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                <h2 className="text-xl font-semibold text-[#0A0E2A] dark:text-white mb-4" style={{ fontFamily: 'Sora, sans-serif' }}>
                   Available Tasks
                 </h2>
                 <div className="space-y-3">
                   {marketplaceTasks.slice(0, 2).map((task) => (
-                    <div key={task.id} className="p-4 border border-gray-200 rounded-xl hover:border-[#00FFB2] transition-colors cursor-pointer">
+                    <div key={task.id} className="p-4 border border-gray-200 dark:border-gray-600 rounded-xl hover:border-[#00FFB2] transition-colors cursor-pointer">
                       <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-medium text-[#0A0E2A] text-sm">{task.title}</h3>
+                        <h3 className="font-medium text-[#0A0E2A] dark:text-white text-sm">{task.title}</h3>
                         <span className="text-[#9B5DE5] font-bold text-sm">{task.reward}</span>
                       </div>
-                      <div className="flex items-center justify-between text-xs text-gray-500">
+                      <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
                         <span>{task.labels} labels</span>
                         <span>{task.difficulty}</span>
                       </div>
@@ -192,13 +258,13 @@ export const LabelerDashboard: React.FC = () => {
                 </div>
               </div>
 
-              <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                <h2 className="text-xl font-semibold text-[#0A0E2A] mb-4" style={{ fontFamily: 'Sora, sans-serif' }}>
+              <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                <h2 className="text-xl font-semibold text-[#0A0E2A] dark:text-white mb-4" style={{ fontFamily: 'Sora, sans-serif' }}>
                   Wallet Overview
                 </h2>
                 <div className="space-y-4">
                   <div className="bg-gradient-to-r from-[#00FFB2]/10 to-[#00FFB2]/5 p-4 rounded-xl">
-                    <div className="text-sm text-gray-600 mb-1">Available Balance</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-300 mb-1">Available Balance</div>
                     <div className="text-2xl font-bold text-[#00FFB2]">2,847.3 ICP</div>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
@@ -219,7 +285,7 @@ export const LabelerDashboard: React.FC = () => {
         {activeSection === 'marketplace' && (
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <h2 className="text-xl font-semibold text-[#0A0E2A]" style={{ fontFamily: 'Sora, sans-serif' }}>
+              <h2 className="text-xl font-semibold text-[#0A0E2A] dark:text-white" style={{ fontFamily: 'Sora, sans-serif' }}>
                 Task Marketplace
               </h2>
               <div className="flex items-center space-x-2">
@@ -228,7 +294,7 @@ export const LabelerDashboard: React.FC = () => {
                   <input
                     type="text"
                     placeholder="Search tasks..."
-                    className="pl-10 pr-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00FFB2] focus:border-transparent text-sm"
+                    className="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00FFB2] focus:border-transparent text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                   />
                 </div>
                 <button className="flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 text-sm text-gray-700 dark:text-gray-300">
@@ -240,13 +306,13 @@ export const LabelerDashboard: React.FC = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {marketplaceTasks.map((task) => (
-                <div key={task.id} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                <div key={task.id} className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow">
                   <div className="flex items-start justify-between mb-4">
                     <div>
-                      <h3 className="text-lg font-semibold text-[#0A0E2A] mb-1" style={{ fontFamily: 'Sora, sans-serif' }}>
+                      <h3 className="text-lg font-semibold text-[#0A0E2A] dark:text-white mb-1" style={{ fontFamily: 'Sora, sans-serif' }}>
                         {task.title}
                       </h3>
-                      <p className="text-sm text-gray-600">{task.client}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-300">{task.client}</p>
                     </div>
                     <div className="flex items-center space-x-2">
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${
@@ -258,11 +324,11 @@ export const LabelerDashboard: React.FC = () => {
                       }`}>
                         {task.difficulty}
                       </span>
-                      <span className="text-xs text-gray-500">Due: {task.deadline}</span>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">Due: {task.deadline}</span>
                     </div>
                   </div>
 
-                  <p className="text-sm text-gray-600 mb-4">{task.description}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">{task.description}</p>
 
                   <div className="flex flex-wrap gap-2 mb-4">
                     {task.skills.map((skill) => (
@@ -276,18 +342,18 @@ export const LabelerDashboard: React.FC = () => {
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div className="bg-gray-50 p-3 rounded-xl">
-                      <div className="text-xs text-gray-500 mb-1">Reward per Label</div>
+                    <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-xl">
+                      <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Reward per Label</div>
                       <div className="text-lg font-bold text-[#9B5DE5]">{task.reward}</div>
                     </div>
-                    <div className="bg-gray-50 p-3 rounded-xl">
-                      <div className="text-xs text-gray-500 mb-1">Total Potential</div>
+                    <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-xl">
+                      <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Total Potential</div>
                       <div className="text-lg font-bold text-[#00FFB2]">{task.totalReward}</div>
                     </div>
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-gray-600 dark:text-gray-300">
                       <span className="font-medium">{task.labels}</span> labels • {task.timeEstimate}
                     </div>
                     <button className="bg-[#00FFB2] text-[#0A0E2A] px-4 py-2 rounded-xl font-medium hover:bg-[#00FFB2]/90 transition-colors">
@@ -303,24 +369,24 @@ export const LabelerDashboard: React.FC = () => {
         {/* Active Tasks Section */}
         {activeSection === 'active' && (
           <div className="space-y-6">
-            <h2 className="text-xl font-semibold text-[#0A0E2A]" style={{ fontFamily: 'Sora, sans-serif' }}>
+            <h2 className="text-xl font-semibold text-[#0A0E2A] dark:text-white" style={{ fontFamily: 'Sora, sans-serif' }}>
               Active Tasks
             </h2>
 
             {activeTasks.map((task) => (
-              <div key={task.id} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+              <div key={task.id} className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-4 gap-4">
                   <div>
-                    <h3 className="text-lg font-semibold text-[#0A0E2A]" style={{ fontFamily: 'Sora, sans-serif' }}>
+                    <h3 className="text-lg font-semibold text-[#0A0E2A] dark:text-white" style={{ fontFamily: 'Sora, sans-serif' }}>
                       {task.title}
                     </h3>
-                    <p className="text-sm text-gray-600">{task.completed} / {task.total} labels completed</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">{task.completed} / {task.total} labels completed</p>
                   </div>
                   <div className="flex items-center space-x-4">
                     <span className="text-sm text-[#9B5DE5] font-medium">
                       {task.reward} per label
                     </span>
-                    <span className="text-sm text-gray-500">
+                    <span className="text-sm text-gray-500 dark:text-gray-400">
                       Due: {task.deadline}
                     </span>
                   </div>
@@ -328,10 +394,10 @@ export const LabelerDashboard: React.FC = () => {
 
                 <div className="mb-4">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-gray-600">Progress</span>
-                    <span className="text-sm font-medium text-[#0A0E2A]">{task.progress}%</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-300">Progress</span>
+                    <span className="text-sm font-medium text-[#0A0E2A] dark:text-white">{task.progress}%</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                     <div
                       className="bg-[#00FFB2] h-2 rounded-full transition-all duration-300"
                       style={{ width: `${task.progress}%` }}
@@ -340,11 +406,11 @@ export const LabelerDashboard: React.FC = () => {
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm text-gray-600 dark:text-gray-300">
                     <span className="font-medium">{task.status}</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <button className="bg-[#F2F2F2] text-[#0A0E2A] px-4 py-2 rounded-xl font-medium hover:bg-gray-300 transition-colors">
+                    <button className="bg-[#F2F2F2] dark:bg-gray-700 text-[#0A0E2A] dark:text-white px-4 py-2 rounded-xl font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
                       Pause
                     </button>
                     <button className="bg-[#00FFB2] text-[#0A0E2A] px-4 py-2 rounded-xl font-medium hover:bg-[#00FFB2]/90 transition-colors">
@@ -356,13 +422,13 @@ export const LabelerDashboard: React.FC = () => {
             ))}
 
             {/* Inline Labeling UI Example */}
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-              <h3 className="text-lg font-semibold text-[#0A0E2A] mb-4" style={{ fontFamily: 'Sora, sans-serif' }}>
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+              <h3 className="text-lg font-semibold text-[#0A0E2A] dark:text-white mb-4" style={{ fontFamily: 'Sora, sans-serif' }}>
                 Current Labeling Task
               </h3>
-              <div className="bg-gray-50 p-4 rounded-xl mb-4">
-                <div className="text-sm text-gray-600 mb-2">Transaction Data:</div>
-                <div className="font-mono text-sm bg-white p-3 rounded-lg border">
+              <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-xl mb-4">
+                <div className="text-sm text-gray-600 dark:text-gray-300 mb-2">Transaction Data:</div>
+                <div className="font-mono text-sm bg-white dark:bg-gray-800 p-3 rounded-lg border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-100">
                   {`{
   "tx_hash": "0x1a2b3c4d5e6f...",
   "amount": "0.5 BTC",
@@ -373,12 +439,12 @@ export const LabelerDashboard: React.FC = () => {
                 </div>
               </div>
               <div className="space-y-3">
-                <div className="text-sm font-medium text-[#0A0E2A]">Risk Assessment:</div>
+                <div className="text-sm font-medium text-[#0A0E2A] dark:text-white">Risk Assessment:</div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                   {['Low Risk', 'Medium Risk', 'High Risk', 'Suspicious'].map((option) => (
                     <button
                       key={option}
-                      className="px-3 py-2 border border-gray-300 rounded-xl text-sm hover:bg-[#00FFB2]/10 hover:border-[#00FFB2] transition-colors"
+                      className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-xl text-sm hover:bg-[#00FFB2]/10 hover:border-[#00FFB2] transition-colors text-gray-700 dark:text-gray-300"
                     >
                       {option}
                     </button>
@@ -386,12 +452,12 @@ export const LabelerDashboard: React.FC = () => {
                 </div>
                 <div className="flex items-center space-x-2 mt-4">
                   <input type="checkbox" id="confident" className="rounded" />
-                  <label htmlFor="confident" className="text-sm text-gray-600">
+                  <label htmlFor="confident" className="text-sm text-gray-600 dark:text-gray-300">
                     I'm confident about this classification
                   </label>
                 </div>
                 <div className="flex justify-end space-x-2 mt-4">
-                  <button className="bg-[#F2F2F2] text-[#0A0E2A] px-4 py-2 rounded-xl font-medium">
+                  <button className="bg-[#F2F2F2] dark:bg-gray-700 text-[#0A0E2A] dark:text-white px-4 py-2 rounded-xl font-medium">
                     Skip
                   </button>
                   <button className="bg-[#00FFB2] text-[#0A0E2A] px-4 py-2 rounded-xl font-medium hover:bg-[#00FFB2]/90 transition-colors">
@@ -406,14 +472,14 @@ export const LabelerDashboard: React.FC = () => {
         {/* Earnings Section */}
         {activeSection === 'earnings' && (
           <div className="space-y-6">
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold text-[#0A0E2A]" style={{ fontFamily: 'Sora, sans-serif' }}>
+                <h2 className="text-xl font-semibold text-[#0A0E2A] dark:text-white" style={{ fontFamily: 'Sora, sans-serif' }}>
                   Wallet Overview
                 </h2>
                 <div className="flex items-center space-x-2">
                   <Wallet className="w-5 h-5 text-[#00FFB2]" />
-                  <span className="text-sm text-gray-600">Connected</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-300">Connected</span>
                 </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -437,46 +503,46 @@ export const LabelerDashboard: React.FC = () => {
                 <button className="bg-[#9B5DE5] text-white py-2 rounded-xl font-medium hover:bg-[#9B5DE5]/90 transition-colors">
                   Stake ICP
                 </button>
-                <button className="bg-[#F2F2F2] text-[#0A0E2A] py-2 rounded-xl font-medium hover:bg-gray-300 transition-colors">
+                <button className="bg-[#F2F2F2] dark:bg-gray-700 text-[#0A0E2A] dark:text-white py-2 rounded-xl font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
                   Withdraw
                 </button>
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
-              <div className="p-6 border-b border-gray-100">
-                <h2 className="text-xl font-semibold text-[#0A0E2A]" style={{ fontFamily: 'Sora, sans-serif' }}>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+              <div className="p-6 border-b border-gray-100 dark:border-gray-700">
+                <h2 className="text-xl font-semibold text-[#0A0E2A] dark:text-white" style={{ fontFamily: 'Sora, sans-serif' }}>
                   Earnings History
                 </h2>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-gray-50">
+                  <thead className="bg-gray-50 dark:bg-gray-700">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                         Date
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                         Task
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                         Amount
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                         Transaction
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                         Status
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     {earnings.map((earning, index) => (
-                      <tr key={index} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <tr key={index} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                           {earning.date}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-[#0A0E2A] font-medium">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-[#0A0E2A] dark:text-white font-medium">
                           {earning.task}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-[#00FFB2] font-bold">
@@ -484,7 +550,7 @@ export const LabelerDashboard: React.FC = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
-                            <span className="text-sm font-mono text-gray-600 mr-2">
+                            <span className="text-sm font-mono text-gray-600 dark:text-gray-300 mr-2">
                               {earning.txHash}
                             </span>
                             <ExternalLink className="w-4 h-4 text-gray-400 hover:text-[#00FFB2] cursor-pointer" />
@@ -505,7 +571,7 @@ export const LabelerDashboard: React.FC = () => {
         )}
 
         {/* Mobile Floating Action Button */}
-        <div className="fixed bottom-6 right-6 md:hidden">
+        <div className="fixed bottom-6 right-6 md:hidden z-30">
           <button
             onClick={() => setActiveSection('marketplace')}
             className="w-14 h-14 bg-[#00FFB2] text-[#0A0E2A] rounded-full shadow-lg flex items-center justify-center hover:bg-[#00FFB2]/90 transition-colors"
